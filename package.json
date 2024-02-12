@@ -1,0 +1,34 @@
+{
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.7.2",
+        "lodash": "^4.17.19",
+        "postcss": "^8.1.14",
+        "vite": "^4.0.0"
+    },
+    "name": "laravel-boilerplate",
+    "description": "Brief description of your Laravel project.",
+    "version": "1.0.0",
+    "main": "vite.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/edsellec/laravel-boilerplate.git"
+    },
+    "keywords": [
+        "Laravel",
+        "Boilerplate"
+    ],
+    "author": "Ed Cadenas",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/edsellec/laravel-boilerplate/issues"
+    },
+    "homepage": "https://github.com/edsellec/laravel-boilerplate#readme"
+}

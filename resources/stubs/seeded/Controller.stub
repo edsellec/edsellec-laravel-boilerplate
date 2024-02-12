@@ -1,0 +1,124 @@
+<?php
+
+namespace App\Http\Controllers\{{ module }};
+
+use Illuminate\Routing\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Requests\GenericRequest;
+use App\Http\Requests\{{ module }}\{{ model }}Request;
+use App\Http\Resources\{{ module }}\{{ model }}Resource;
+use App\Helpers\ResponseHelper;
+use App\Services\{{ module }}\{{ model }}Service;
+
+class {{ model }}Controller extends Controller
+{
+    private {{ model }}Service $itemService;
+
+    /**
+     * {{ model }}Controller constructor.
+     *
+     * @param {{ model }}Service $itemService
+     */
+    public function __construct({{ model }}Service $itemService)
+    {
+        $this->itemService = $itemService;
+    }
+    
+    /**
+     * Display a listing of the {{ modelLowerCaseFirstPlural }}.
+     *
+     * @param GenericRequest $request
+     * 
+     * @return JsonResponse|JsonResource
+     */
+    public function index(GenericRequest $request): JsonResponse|JsonResource
+    {
+        $data = GenericRequest::createFrom($request)->toData();
+        $responseData = $this->itemService->get($data);
+
+        if ($responseData->isError()) {
+            return ResponseHelper::error($responseData->getMessage());
+        }
+
+        return ResponseHelper::resource({{ model }}Resource::class, $responseData->getData());
+    }
+
+    /**
+     * Store a newly created {{ modelLowerCaseFirst }} in storage.
+     *
+     * @param {{ model }}Request $request
+     * 
+     * @return JsonResponse|JsonResource
+     */
+    public function store({{ model }}Request $request): JsonResponse|JsonResource
+    {
+        $responseData = $this->itemService->create($request->toData());
+
+        if ($responseData->isError()) {
+            return ResponseHelper::error($responseData->getMessage());
+        }
+
+        return ResponseHelper::resource({{ model }}Resource::class, $responseData->getData());
+    }
+
+    /**
+     * Display the {{ modelLowerCaseFirst }}.
+     *
+     * @param GenericRequest $request
+     * @param string $id
+     * 
+     * @return JsonResponse|JsonResource
+     */
+    public function show(GenericRequest $request, string $id): JsonResponse|JsonResource
+    {
+        $data = GenericRequest::createFrom($request)->toData();
+        $relations = $data->metaData->relations;
+        $responseData = $this->itemService->find($id, $relations);
+
+        if ($responseData->isError()) {
+            return ResponseHelper::error($responseData->getMessage());
+        }
+
+        return ResponseHelper::resource({{ model }}Resource::class, $responseData->getData());
+    }
+
+    /**
+     * Update the {{ modelLowerCaseFirst }} in storage.
+     *
+     * @param {{ model }}Request $request
+     * @param string $id
+     * 
+     * @return JsonResponse|JsonResource
+     */
+    public function update({{ model }}Request $request, string $id): JsonResponse|JsonResource
+    {
+        $itemData = $request->toData();
+        $itemData->id = $id;
+        $responseData = $this->itemService->update($itemData);
+
+        if ($responseData->isError()) {
+            return ResponseHelper::error($responseData->getMessage());
+        }
+
+        return ResponseHelper::resource({{ model }}Resource::class, $responseData->getData());
+    }
+
+    /**
+     * Remove the {{ modelLowerCaseFirst }} from storage.
+     *
+     * @param string $id
+     * 
+     * @return JsonResponse
+     */
+    public function destroy(string $id): JsonResponse|JsonResource
+    {
+        $responseData = $this->itemService->delete($id);
+
+        if ($responseData->isError()) {
+            return ResponseHelper::error($responseData->getMessage());
+        }
+
+        return ResponseHelper::success($responseData->getMessage());
+    }
+}

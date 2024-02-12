@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Services\{{ module }};
+
+use App\Data\Shared\GenericData;
+use App\Data\Shared\ResponseData;
+use App\Data\{{ module }}\{{ model }}Data;
+use App\Helpers\ErrorHelper;
+use App\Repositories\{{ module }}\{{ model }}Repository;
+use Throwable;
+
+class {{ model }}Service
+{
+    private {{ model }}Repository ${{ modelLowerCaseFirst }}Repository;
+
+    /**
+     * {{ model }}Service constructor.
+     *
+     * @param {{ model }}Repository ${{ modelLowerCaseFirst }}Repository
+     */
+    public function __construct({{ model }}Repository ${{ modelLowerCaseFirst }}Repository)
+    {
+        $this->{{ modelLowerCaseFirst }}Repository = ${{ modelLowerCaseFirst }}Repository;
+    }
+    
+    /**
+     * Display a listing of the {{ modelLowerCaseFirstPlural }}.
+     *
+     * @param GenericData $data
+     * 
+     * @return ResponseData
+     */
+    public function get(GenericData $data): ResponseData
+    {
+        try {
+            return ResponseData::map(
+                $this->{{ modelLowerCaseFirst }}Repository->get($data)
+            );
+        } catch (Throwable $e) {
+            return ErrorHelper::generateErrorResponse(__CLASS__, __FUNCTION__, $e);
+        }
+    }
+
+    /**
+     * Store a newly created {{ modelLowerCaseFirst }} in storage.
+     *
+     * @param {{ model }}Data ${{ modelLowerCaseFirst }}Data
+     * 
+     * @return ResponseData
+     */
+    public function create({{ model }}Data ${{ modelLowerCaseFirst }}Data): ResponseData
+    {
+        try {
+            ${{ modelLowerCaseFirst }} = $this->{{ modelLowerCaseFirst }}Repository->save(${{ modelLowerCaseFirst }}Data);
+            if (empty(${{ modelLowerCaseFirst }})) {
+                return ResponseData::error('Unable to create {{ modelLowerCaseFirst }}. Please check your input and try again.');
+            }
+
+            return ResponseData::success('New {{ modelLowerCaseFirst }} created successfully.', ${{ modelLowerCaseFirst }});
+        } catch (Throwable $e) {
+            return ErrorHelper::generateErrorResponse(__CLASS__, __FUNCTION__, $e);
+        }
+    }
+
+    /**
+     * Display the {{ modelLowerCaseFirst }}.
+     *
+     * @param string $id
+     * @param array $relations
+     * 
+     * @return ResponseData
+     */
+    public function find(string $id, array $relations = []): ResponseData
+    {
+        try {
+            return ResponseData::map(
+                $this->{{ modelLowerCaseFirst }}Repository->find($id, $relations)
+            );
+        } catch (Throwable $e) {
+            return ErrorHelper::generateErrorResponse(__CLASS__, __FUNCTION__, $e);
+        }
+    }
+
+    /**
+     * Update the {{ modelLowerCaseFirst }} in storage.
+     *
+     * @param {{ model }}Data ${{ modelLowerCaseFirst }}Data
+     * 
+     * @return ResponseData
+     */
+    public function update({{ model }}Data ${{ modelLowerCaseFirst }}Data): ResponseData
+    {
+        try {
+            ${{ modelLowerCaseFirst }} = $this->{{ modelLowerCaseFirst }}Repository->find(${{ modelLowerCaseFirst }}Data->id);
+            if (empty(${{ modelLowerCaseFirst }})) {
+                return ResponseData::error('The requested {{ modelLowerCaseFirst }} could not be found. Please verify the ID and try again.');
+            }
+
+            ${{ modelLowerCaseFirst }} = $this->{{ modelLowerCaseFirst }}Repository->save(${{ modelLowerCaseFirst }}Data, ${{ modelLowerCaseFirst }});
+            if (empty(${{ modelLowerCaseFirst }})) {
+                return ResponseData::error('Unable to update {{ modelLowerCaseFirst }}. Please check your input and try again.');
+            }
+
+            return ResponseData::success('{{ model }} updated successfully.', ${{ modelLowerCaseFirst }});
+        } catch (Throwable $e) {
+            return ErrorHelper::generateErrorResponse(__CLASS__, __FUNCTION__, $e);
+        }
+    }
+
+    /**
+     * Remove the {{ modelLowerCaseFirst }} from storage.
+     *
+     * @param string $id
+     * 
+     * @return ResponseData
+     */
+    public function delete(string $id): ResponseData
+    {
+        try {
+            $isExists = $this->{{ modelLowerCaseFirst }}Repository->exists($id);
+            if (!$isExists) {
+                return ResponseData::error('The requested {{ modelLowerCaseFirst }} could not be found. Please verify the ID and try again.');
+            }
+
+            $isDeleted = $this->{{ modelLowerCaseFirst }}Repository->delete($id);
+            if (!$isDeleted) {
+                return ResponseData::error('Unable to delete the {{ modelLowerCaseFirst }}. Please ensure that the ID is valid and try again.');
+            }
+
+            return ResponseData::success('{{ model }} deleted successfully.');
+        } catch (Throwable $e) {
+            return ErrorHelper::generateErrorResponse(__CLASS__, __FUNCTION__, $e);
+        }
+    }
+}

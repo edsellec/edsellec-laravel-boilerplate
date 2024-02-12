@@ -1,0 +1,92 @@
+<?php
+
+namespace App\Repositories\{{ module }};
+
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\Data\{{ module }}\{{ model }}Data;
+use App\Data\Shared\GenericData;
+use App\Models\{{ model }};
+
+class {{ model }}Repository
+{
+    /**
+     * Get paginated {{ modelLowerCaseFirstPlural }} from the repository.
+     *
+     * @param GenericData $data
+     * 
+     * @return LengthAwarePaginator
+     */
+    public function get(GenericData $data): LengthAwarePaginator
+    {
+        $relations = $data->metaData->relations;
+        ${{ modelLowerCaseFirstPlural }} = {{ model }}::with($relations);
+
+        return ${{ modelLowerCaseFirstPlural }}->orderBy(
+            $data->metaData->sortBy,
+            $data->metaData->sortDirection
+        )->paginate($data->metaData->perPage);
+    }
+
+    /**
+     * Saves {{ modelLowerCaseFirst }} to the repository.
+     *
+     * @param {{ model }}Data ${{ modelLowerCaseFirst }}Data
+     * @param {{ model }}|null ${{ modelLowerCaseFirst }}
+     * 
+     * @return {{ model }}|null
+     */
+    public function save({{ model }}Data ${{ modelLowerCaseFirst }}Data, ?{{ model }} ${{ modelLowerCaseFirst }} = null): ?{{ model }}
+    {
+        ${{ modelLowerCaseFirst }} ??= new {{ model }}();
+        ${{ modelLowerCaseFirst }}->status = ${{ modelLowerCaseFirst }}Data->status;
+
+        if (!empty(${{ modelLowerCaseFirst }})) {
+            ${{ modelLowerCaseFirst }}->touch();
+        }
+
+        ${{ modelLowerCaseFirst }}->save();
+        return ${{ modelLowerCaseFirst }};
+    }
+
+    /**
+     * Find {{ modelLowerCaseFirst }} from the repository by id.
+     *
+     * @param string $id
+     * @param array $relations
+     * 
+     * @return {{ model }}|null
+     */
+    public function find(string $id, array $relations = []): ?{{ model }}
+    {
+        return {{ model }}::with($relations)->firstWhere('id', $id);
+    }
+
+    /**
+     * Check if {{ modelLowerCaseFirst }} exists from the repository by id.
+     *
+     * @param string $id
+     * 
+     * @return bool
+     */
+    public function exists(string $id): bool
+    {
+        return {{ model }}::where('id', $id)->exists();
+    }
+
+    /**
+     * Delete {{ modelLowerCaseFirst }} from the repository.
+     *
+     * @param string $id
+     * 
+     * @return bool
+     */
+    public function delete(string $id): bool
+    {
+        ${{ modelLowerCaseFirst }} = $this->find($id);
+        if (${{ modelLowerCaseFirst }}) {
+            return (bool) ${{ modelLowerCaseFirst }}->delete();
+        }
+
+        return false;
+    }
+}

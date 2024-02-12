@@ -1,0 +1,72 @@
+<?php
+
+namespace Tests\Unit\{{ module }};
+
+use App\Data\Shared\ResponseData;
+use App\Http\Controllers\{{ module }}\{{ model }}Controller;
+use App\Services\{{ module }}\{{ model }}Service;
+use App\Http\Requests\GenericRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Tests\TestCase;
+use Mockery;
+
+/**
+ * Class {{ model }}UnitTest
+ *
+ * @package Tests
+ */
+class {{ model }}UnitTest extends TestCase
+{
+    private string $endpoint = '/{{ modelDashedLowerCasePlural }}';
+    
+    /**
+     * @var {{ model }}Controller
+     */
+    private {{ model }}Controller ${{ modelLowerCaseFirst }}Controller;
+
+    /**
+     * @var {{ model }}Service|Mockery\MockInterface
+     */
+    private {{ model }}Service|Mockery\MockInterface ${{ modelLowerCaseFirst }}Service;
+
+    /**
+     * Set up the test case.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->{{ modelLowerCaseFirst }}Service = Mockery::mock({{ model }}Service::class);
+        $this->{{ modelLowerCaseFirst }}Controller = new {{ model }}Controller($this->{{ modelLowerCaseFirst }}Service);
+    }
+
+    /**
+     * Tear down the test case.
+     */
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
+    /**
+     * Test the index method of the {{ model }}Controller.
+     */
+    public function testIndexMethod(): void
+    {
+        $request = GenericRequest::createFrom(Request::create($this->endpoint, 'GET'));
+        $responseData = ResponseData::success('Test success response');
+        $this->{{ modelLowerCaseFirst }}Service
+            ->shouldReceive('get')
+            ->once()
+            ->with(Mockery::on(function ($argument) use ($request) {
+                return json_encode($argument) === json_encode($request->toData());
+            }))
+            ->andReturn($responseData);
+
+        $response = $this->{{ modelLowerCaseFirst }}Controller->index($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(200, $response->status());
+    }
+}

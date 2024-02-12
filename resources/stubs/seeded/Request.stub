@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Http\Requests\{{ module }};
+
+use App\Constants\StatusConstant;
+use App\Data\{{ module }}\{{ model }}Data;
+use App\Http\Requests\BaseRequest;
+use Illuminate\Validation\Rule;
+
+class {{ model }}Request extends BaseRequest
+{
+    /**
+     * Determine if the authenticated user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'status' => [
+                'nullable',
+                'string',
+                Rule::in(StatusConstant::getAllConstantValues()),
+            ],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        $statuses = implode(', ', StatusConstant::getAllConstantValues());
+
+        return [
+            'status.string' => 'The status must be a valid string.',
+            'status.in' => 'Invalid status value. Allowed values are: ' . $statuses . '.',
+        ];
+    }
+
+    /**
+     * Transform request to data object.
+     *
+     * @return {{ model }}Data
+     */
+    public function toData(): {{ model }}Data
+    {
+        return {{ model }}Data::from([
+            'status' => $this->getInputAsString('status', StatusConstant::PUBLISHED),
+            'metaData' => $this->getMetaData(),
+            'userData' => $this->getAuthUserData(),
+        ]);
+    }
+}

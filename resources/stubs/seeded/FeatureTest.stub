@@ -1,0 +1,120 @@
+<?php
+
+namespace Tests\Feature\{{ module }};
+
+use Tests\BaseFeatureTest;
+
+class {{ model }}FeatureTest extends BaseFeatureTest
+{
+    private string $endpoint = '/api/admin/{{ moduleDashedLowerCaseWord }}/{{ modelDashedLowerCasePlural }}';
+
+    /**
+     * Get {{ modelLowerCaseFirst }} payload.
+     *
+     * @return array
+     */
+    private function get{{ model }}Payload(): array
+    {
+        return [];
+    }
+
+    /**
+     * Create {{ modelLowerCaseFirst }} and get the id.
+     *
+     * @param array $payload
+     * @return string|null
+     */
+    private function createAndGet{{ model }}Id(array $payload): ?string
+    {
+        $authData = $this->loginAsAdmin();
+        $response = $this->withHeaders($authData->getAuthorizationHeader())->postJson($this->endpoint, $payload);
+        $responseJson = $response->json();
+        $data = $responseJson['data'];
+
+        return $data['id'] ?? null;
+    }
+
+    /**
+     * @test
+     *
+     * A basic test in store {{ modelLowerCaseFirst }}.
+     *
+     * @return void
+     */
+    public function testStore{{ model }}()
+    {
+        $auth = $this->loginAsAdmin();
+        $payload = $this->get{{ model }}Payload();
+
+        $response = $this->withHeaders($auth->getAuthorizationHeader())->postJson($this->endpoint, $payload);
+        $response->assertCreated()->assertJson($payload);
+    }
+
+    /**
+     * @test
+     *
+     * A basic test in getting {{ modelLowerCaseFirstPlural }}.
+     *
+     * @return void
+     */
+    public function testIndex{{ model }}()
+    {
+        $auth = $this->loginAsAdmin();
+        $expectedJsonStructure = ['data', 'links', 'meta'];
+
+        $response = $this->withHeaders($auth->getAuthorizationHeader())->getJson($this->endpoint);
+        $response->assertOk()->assertJsonStructure($expectedJsonStructure);
+    }
+
+    /**
+     * @test
+     *
+     * A basic test in getting {{ modelLowerCaseFirst }} by id.
+     *
+     * @return void
+     */
+    public function testShow{{ model }}()
+    {
+        $auth = $this->loginAsAdmin();
+        $payload = $this->get{{ model }}Payload();
+        ${{ modelLowerCaseFirst }}Id = $this->createAndGet{{ model }}Id($payload);
+
+        $response = $this->withHeaders($auth->getAuthorizationHeader())->getJson("$this->endpoint/${{ modelLowerCaseFirst }}Id");
+        $response->assertOk()->assertJson($payload);
+    }
+
+    /**
+     * @test
+     *
+     * A basic test in updating {{ modelLowerCaseFirst }} by id.
+     *
+     * @return void
+     */
+    public function testUpdate{{ model }}()
+    {
+        $auth = $this->loginAsAdmin();
+        $payload = $this->get{{ model }}Payload();
+        ${{ modelLowerCaseFirst }}Id = $this->createAndGet{{ model }}Id($payload);
+
+        $response = $this->withHeaders($auth->getAuthorizationHeader())->putJson("$this->endpoint/${{ modelLowerCaseFirst }}Id", $payload);
+        $response->assertCreated()->assertJson($payload);
+    }
+
+    /**
+     * @test
+     *
+     * A basic test in destroying {{ modelLowerCaseFirst }} by id.
+     *
+     * @return void
+     */
+    public function testDestroy{{ model }}()
+    {
+        $auth = $this->loginAsAdmin();
+        $payload = $this->get{{ model }}Payload();
+        ${{ modelLowerCaseFirst }}Id = $this->createAndGet{{ model }}Id($payload);
+        $expectedJsonStructure = ['success'];
+
+        $response = $this->withHeaders($auth->getAuthorizationHeader())->deleteJson("$this->endpoint/${{ modelLowerCaseFirst }}Id");
+        $response->assertOk()->assertJsonStructure($expectedJsonStructure);
+    }
+}
