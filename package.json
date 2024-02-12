@@ -10,7 +10,7 @@
         "postcss": "^8.1.14",
         "vite": "^4.0.0"
     },
-    "name": "laravel-boilerplate",
+    "name": "edsellec-laravel-boilerplate",
     "description": "Brief description of your Laravel project.",
     "version": "1.0.0",
     "main": "vite.config.js",
@@ -19,7 +19,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/edsellec/laravel-boilerplate.git"
+        "url": "git+https://github.com/edsellec/edsellec-laravel-boilerplate.git"
     },
     "keywords": [
         "Laravel",
@@ -28,7 +28,7 @@
     "author": "Ed Cadenas",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/edsellec/laravel-boilerplate/issues"
+        "url": "https://github.com/edsellec/edsellec-laravel-boilerplate/issues"
     },
-    "homepage": "https://github.com/edsellec/laravel-boilerplate#readme"
+    "homepage": "https://github.com/edsellec/edsellec-laravel-boilerplate#readme"
 }
